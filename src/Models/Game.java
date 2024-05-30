@@ -2,7 +2,7 @@ package src.Models;
 
 import src.Exception.InvalidBotCount;
 import src.Exception.InvalidPlayersCount;
-import src.WinningStrategy.winningStrategy;
+import src.Stratetgy.WinningStrategy.winningStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +77,57 @@ private Game(int dimensions, List<Player> p, List<winningStrategy> ws){
         return winningStrategies;
     }
 
+    public boolean validate(Move m){
+    int row = m.getCell().getRow();
+    int col = m.getCell().getCol();
+    if(row > board.getSize()){
+        return false;
+    };
+    if(col > board.getSize()){
+        return false;
+    }
+    if(board.getBoard().get(row).get(col).getCellState().equals(CellState.EMPTY)){
+        return true;
+    }
+    return false;
+    }
+
+    public void makeMove(){
+     Player currentPlayer = players.get(nextPlayerTurn);
+     System.out.println("Current Turn is : " + currentPlayer.getName());
+     Move m = currentPlayer.makeMove(board);
+     if(!validate(m)){
+         System.out.println("Incorrect Move!!");
+         return;
+     }
+     int row = m.getCell().getRow();
+     int col = m.getCell().getCol();
+//     Updating the cell:::
+     Cell cellUpdate = board.getBoard().get(row).get(col);
+     cellUpdate.setCellState(CellState.FILLED);
+     cellUpdate.setPlayer(currentPlayer);
+//     Saving of the Move for undo purpose:::
+        Move m = new Move(cellUpdate,currentPlayer);
+        moves.add(m);
+        nextPlayerTurn+=1;
+        nextPlayerTurn %= players.size();
+       if(CheckWinner(m,board)){
+           gameState = GameState.SUCCESS;
+           winner = currentPlayer;
+       }else if(moves.size() == board.getSize() * board.getSize()){
+           gameState = GameState.DRAW;
+       }
+       System.out.println();
+    }
+
+    public boolean CheckWinner(Move m, Board b){
+     for (winningStrategy w : winningStrategies){
+         if(w.checkWinner(m,b)){
+             return true;
+         };
+     }
+     return  false;
+    };
 
     public static gameBuilder getInstance(){
         return new gameBuilder();
@@ -134,4 +185,5 @@ private Game(int dimensions, List<Player> p, List<winningStrategy> ws){
             return new Game(this.dimensions,this.players, this.winningStrategies);
         }
     }
+
 }

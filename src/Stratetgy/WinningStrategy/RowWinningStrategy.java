@@ -1,10 +1,10 @@
-package src.WinningStrategy;
+package src.Stratetgy.WinningStrategy;
 
 import src.Models.Board;
-import src.Models.Player;
+import src.Models.Move;
 
 public class RowWinningStrategy implements winningStrategy {
-    public  boolean checkWinner(Player p, Board b){
+    public  boolean checkWinner(Move m, Board b){
       return false;
     }
 }

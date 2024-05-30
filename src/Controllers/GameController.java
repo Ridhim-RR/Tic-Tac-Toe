@@ -3,7 +3,7 @@ package src.Controllers;
 import src.Models.Game;
 import src.Models.GameState;
 import src.Models.Player;
-import src.WinningStrategy.winningStrategy;
+import src.Stratetgy.WinningStrategy.winningStrategy;
 
 import java.util.List;
 
@@ -26,9 +26,10 @@ public class GameController {
         g.getBoard().printBoard();
     }
 
-    public void makeMove(){
+    public void makeMove(Game g){
 //        This is the functionality of Player.........
 //        TODO Implementation.......
+        g.makeMove();
 
     }
 
